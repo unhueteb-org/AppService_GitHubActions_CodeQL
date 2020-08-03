@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubActions", "GithubActions\GithubActions.csproj", "{AB5E1620-3322-4CA4-A9CA-6EFF8AB1A3C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubActions", "GithubActions_netcore2.1\GithubActions.csproj", "{AB5E1620-3322-4CA4-A9CA-6EFF8AB1A3C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
