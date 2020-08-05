@@ -38,4 +38,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: WebApp
-        path: ${{ GITHUB_WORKSPACE }}/ARMTemplates
+        path: ${{ env.GITHUB_WORKSPACE }}/ARMTemplates
