@@ -9,6 +9,9 @@ on:
       - master
 
 jobs:
+  
+  #Build ASP.NET Core template webite and publish website + ARM T
+     
   build-and-publish-webapp:
     runs-on: windows-latest
 
@@ -39,3 +42,60 @@ jobs:
       with:
         name: ARM_Templates
         path: ${{ github.workspace }}/ARMTemplates
+        
+  #Download ARM templates and Deploy ARM infra      
+  deploy-arm-templates:
+    runs-on: windows-latest
+    
+    env:
+      AZURE_RESOURCE_GROUP: att-az400-githubaction-appservice-rg   # set this to your Azure Resource group's name  
+      AZURE_LOCATION: WestEurope  # set this to your Location Name 
+    
+    steps:
+                
+    #Download ARM template artifatcts
+    - uses: actions/download-artifact@v2
+      with:
+        name: ARM_Templates
+    
+    # Authentication
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+        
+    # Create Resource Group in Azure  
+    - name: Deploy ARM Template
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: 
+        # You can change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION 
+        # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
+        # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
+         
+         az group create --location ${{ env.AZURE_LOCATION }} --name ${{ env.AZURE_RESOURCE_GROUP }} 
+      
+        # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
+
+    # Deployment of template    
+    - name: Deploy ARM Template
+      uses: azure/CLI@v1
+      with:
+        azcliversion: latest
+        inlineScript: 
+        # You can change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION 
+        # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
+        # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
+          
+          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $GITHUB_WORKSPACE/azuredeploy.parameters.json
+       
+       # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
+
+      
+             
+        
+        
+  
