@@ -7,7 +7,9 @@ on:
   push:
     branches:
       - master
-
+env:
+      AZURE_APPSERVICE_NAME: githubactions-unai
+    
 jobs:
   
   #Build ASP.NET Core template webite and publish website + ARM T
@@ -91,11 +93,38 @@ jobs:
         # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
         # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
           
-          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $GITHUB_WORKSPACE/azuredeploy.parameters.json
+          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $GITHUB_WORKSPACE/azuredeploy.parameters.json -- parameters sites_githubactions_unai_name=${{ env.AZURE_APPSERVICE_NAME }} --mode incremental 
        
        # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
 
+
+#Publish Azure App Service
+  publish-app-service:
+    runs-on: windows-latest
+    
+    needs:  deploy-arm-templates
       
+       
+    
+    steps:
+      #download website files from artifacts 
+      - uses: actions/download-artifact@v2
+        with:
+          name: WebApp
+          
+          
+     #Publish to Azure App Service     
+      - name: Publish to Azure Web App
+        uses: azure/webapps-deploy@v1
+        with:
+          app-name: ${{ env.AZURE_APPSERVICE_NAME }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_9e622d92ae2148788ad6bb9ab5e0af28 }}
+          package: ${{env.DOTNET_ROOT}}/myapp 
+    
+    
+       
+
+    
              
         
         
