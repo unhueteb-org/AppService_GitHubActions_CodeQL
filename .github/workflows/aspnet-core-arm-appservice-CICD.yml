@@ -15,7 +15,7 @@ jobs:
   #Build ASP.NET Core template webite and publish website + ARM T
      
   build-and-publish-webapp:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@master
