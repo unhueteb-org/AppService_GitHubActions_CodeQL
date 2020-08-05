@@ -98,14 +98,20 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: WebApp
-          
+      
+ 
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+         creds: ${{ secrets.AZURE_CREDENTIALS  }}
           
      #Publish to Azure App Service     
       - name: Publish to Azure Web App
         uses: azure/webapps-deploy@v1
         with:
           app-name: ${{ env.AZURE_APPSERVICE_NAME }}
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_9e622d92ae2148788ad6bb9ab5e0af28 }}
           package: ${{env.DOTNET_ROOT}}/myapp 
     
     
