@@ -47,7 +47,7 @@ jobs:
         
   #Download ARM templates and Deploy ARM infra      
   deploy-arm-templates:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     needs: build-and-publish-webapp
     env:
@@ -87,7 +87,7 @@ jobs:
 
 #Publish Azure App Service
   publish-app-service:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     
     needs:  deploy-arm-templates
       
