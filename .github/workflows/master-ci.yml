@@ -25,10 +25,17 @@ jobs:
 
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-      
+     
+     #Publish webapp artifacts
     - name: Upload WebApp Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: WebApp
         path: ${{env.DOTNET_ROOT}}/myapp
- 
+    
+     #Publish webapp artifacts
+    - name: Upload WebApp Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: WebApp
+        path: ${{GITHUB_WORKSPACE}}/ARMTemplates
