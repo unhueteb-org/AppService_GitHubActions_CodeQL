@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  build-and-publish webapp:
     runs-on: windows-latest
 
     steps:
@@ -25,11 +25,10 @@ jobs:
 
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v1
+      
+    - name: Upload WebApp Build Artifact
+      uses: actions/upload-artifact@v2
       with:
-        app-name: 'githubactions-unai'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_9e622d92ae2148788ad6bb9ab5e0af28 }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        name: WebApp
+        path: ${{env.DOTNET_ROOT}}/myapp
+ 
