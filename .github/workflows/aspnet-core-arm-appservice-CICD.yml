@@ -80,7 +80,7 @@ jobs:
         # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
         # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
           
-          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $GITHUB_WORKSPACE/azuredeploy.parameters.json -- parameters sites_githubactions_unai_name=${{ env.AZURE_APPSERVICE_NAME }} --mode incremental 
+          az group deployment create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $GITHUB_WORKSPACE/azuredeploy.parameters.json --parameters sites_githubactions_unai_name=${{ env.AZURE_APPSERVICE_NAME }} --mode incremental 
        
        # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
 
