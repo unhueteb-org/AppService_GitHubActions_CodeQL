@@ -1,0 +1,126 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Master Build CI/CD
+
+on:
+  push:
+    branches:
+      - master
+  
+env:
+      AZURE_APPSERVICE_NAME: githubactions-unai
+    
+jobs:
+  
+  #Build ASP.NET Core template webite and publish website + ARM T
+     
+  build-and-publish-webapp:
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.1.804'
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+     
+     #Publish webapp artifacts
+    - name: Upload WebApp Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: WebApp
+        path: ${{env.DOTNET_ROOT}}/myapp
+    
+     #Publish webapp artifacts
+    - name: Upload ARM Templates Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ARM_Templates
+        path: ${{ github.workspace }}/ARMTemplates
+        
+  #Download ARM templates and Deploy ARM infra      
+#   deploy-arm-templates:
+#     runs-on: ubuntu-latest
+    
+#     needs: build-and-publish-webapp
+#     env:
+#       AZURE_RESOURCE_GROUP: att-az400-githubaction-appservice-rg   # set this to your Azure Resource group's name  
+#       AZURE_LOCATION: WestEurope  # set this to your Location Name 
+    
+#     steps:
+                
+#     #Download ARM template artifatcts
+#     - uses: actions/download-artifact@v2
+#       with:
+#         name: ARM_Templates
+    
+#     # Authentication
+#     # Set up the following secrets in your repository: AZURE_CREDENTIALS
+#     # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+#     - name: Azure Login
+#       uses: azure/login@v1
+#       with:
+#         creds: ${{ secrets.AZURE_CREDENTIALS  }}
+        
+    
+#     # Deployment of template    
+#     - name: Deploy ARM Template
+#       uses: azure/CLI@v1
+#       with:
+#         azcliversion: latest
+#         inlineScript: 
+#         # You can change these environment variables for your configuration:   AZURE_RESOURCE_GROUP, AZURE_LOCATION 
+#         # For details on usage of environment variables, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
+#         # or specify these parameters inline.  Example:  az group create -l westus -n MyResourceGroup
+          
+#           az deployment group create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file $GITHUB_WORKSPACE/azuredeploy.json  --parameters $GITHUB_WORKSPACE/azuredeploy.parameters.json --parameters sites_githubactions_unai_name=${{ env.AZURE_APPSERVICE_NAME }} --mode incremental 
+       
+#        # For more details on above command refer https://docs.microsoft.com/en-us/cli/azure/group/deployment?view=azure-cli-latest#az-group-deployment-create
+
+
+# #Publish Azure App Service
+#   publish-app-service:
+#     runs-on: ubuntu-latest
+    
+#     needs:  deploy-arm-templates
+      
+       
+    
+#     steps:
+#       #download website files from artifacts 
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: WebApp
+#           path: $GITHUB_WORKSPACE/WebApp
+      
+ 
+#     # Set up the following secrets in your repository: AZURE_CREDENTIALS
+#     # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+#       - name: Azure Login
+#         uses: azure/login@v1
+#         with:
+#          creds: ${{ secrets.AZURE_CREDENTIALS  }}
+          
+#      #Publish to Azure App Service     
+#       - name: Publish to Azure Web App
+#         uses: azure/webapps-deploy@v1
+#         with:
+#           app-name: ${{ env.AZURE_APPSERVICE_NAME }}
+#           package: $GITHUB_WORKSPACE/WebApp
+    
+    
+       
+
+    
+             
+        
+        
+  
