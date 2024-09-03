@@ -58,7 +58,7 @@ jobs:
     steps:
                 
     #Download ARM template artifatcts
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4.1.7
       with:
         name: ARM_Templates
     
@@ -96,7 +96,7 @@ jobs:
     
     steps:
       #download website files from artifacts 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: WebApp
           path: $GITHUB_WORKSPACE/WebApp
